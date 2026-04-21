@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 import time
 import json
 from app.database import init_db
@@ -24,6 +25,9 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    
+    # Mount static files for frontend
+    app.mount("/static", StaticFiles(directory="static"), name="static")
     
     # Request logging and metrics middleware
     @app.middleware("http")

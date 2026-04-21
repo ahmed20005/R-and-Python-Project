@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎓 Student Management System</h1>
+            <div id="user-info" class="user-info" style="display: none;">
+                <span id="username-display"></span>
+                <span id="role-badge" class="badge"></span>
+                <button id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <!-- Auth Section -->
+        <section id="auth-section" class="section">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="register">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <h2>Login</h2>
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div id="login-error" class="error-message"></div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form" style="display: none;">
+                    <h2>Register</h2>
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-role">Role</label>
+                        <select id="register-role">
+                            <option value="student">Student</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <div id="register-error" class="error-message"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Main Content (protected) -->
+        <section id="main-section" class="section" style="display: none;">
+            <!-- Student List -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Students</h2>
+                    <button id="add-student-btn" class="btn btn-primary" style="display: none;">+ Add Student</button>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Department</label>
+                        <input type="text" id="filter-department" placeholder="Filter by department">
+                    </div>
+                    <div class="filter-group">
+                        <label>Min GPA</label>
+                        <input type="number" id="filter-gpa-min" placeholder="Min GPA" step="0.1" min="0" max="4">
+                    </div>
+                    <div class="filter-group">
+                        <label>Max GPA</label>
+                        <input type="number" id="filter-gpa-max" placeholder="Max GPA" step="0.1" min="0" max="4">
+                    </div>
+                    <div class="filter-group">
+                        <label>Enrollment Year</label>
+                        <input type="number" id="filter-year" placeholder="Year">
+                    </div>
+                    <button id="apply-filters-btn" class="btn btn-secondary">Apply Filters</button>
+                    <button id="clear-filters-btn" class="btn btn-secondary">Clear</button>
+                </div>
+
+                <!-- Students Table -->
+                <div class="table-container">
+                    <table id="students-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>GPA</th>
+                                <th>Enrollment Year</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-tbody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button id="prev-page-btn" class="btn btn-secondary">Previous</button>
+                    <span id="page-info">Page 1</span>
+                    <button id="next-page-btn" class="btn btn-secondary">Next</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add/Edit Student Modal -->
+        <div id="student-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Add Student</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <form id="student-form">
+                    <input type="hidden" id="student-id">
+                    <div class="form-group">
+                        <label for="student-first-name">First Name</label>
+                        <input type="text" id="student-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-last-name">Last Name</label>
+                        <input type="text" id="student-last-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-department">Department</label>
+                        <input type="text" id="student-department" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-gpa">GPA</label>
+                        <input type="number" id="student-gpa" required step="0.01" min="0" max="4">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-enrollment-year">Enrollment Year</label>
+                        <input type="number" id="student-enrollment-year" required min="2000" max="2100">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-phone">Phone</label>
+                        <input type="tel" id="student-phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-address">Address</label>
+                        <textarea id="student-address" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary cancel-btn">Cancel</button>
+                    </div>
+                    <div id="student-form-error" class="error-message"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- View Student Modal -->
+        <div id="view-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Student Details</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div id="view-student-content">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div id="notification" class="notification" style="display: none;">
+            <span id="notification-message"></span>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
